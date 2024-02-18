@@ -27,7 +27,7 @@ export const Container = styled.div`
   background-color: #ffff;
   border-radius: 20px 20px 0 0;
   margin-top: 20px;
-  padding: 20px;
+  padding: 20px 20px 40px;
   position: absolute;
   bottom: 0;
   display: flex;

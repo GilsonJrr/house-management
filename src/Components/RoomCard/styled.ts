@@ -3,6 +3,7 @@ import styled from "styled-components";
 type Props = {
   color?: string;
   expand?: boolean;
+  done?: boolean;
 };
 
 export const Container = styled.div<Props>`
@@ -12,10 +13,11 @@ export const Container = styled.div<Props>`
   border-radius: 10px;
 `;
 
-export const HeaderContainer = styled.div`
+export const HeaderContainer = styled.div<Props>`
   display: flex;
   justify-content: space-between;
   gap: 10px;
+  margin-bottom: ${({ expand }) => (expand ? "20" : "0")}px;
 `;
 
 export const IconWarper = styled.div<Props>`
@@ -62,16 +64,36 @@ export const TasksContainer = styled.div`
   width: 100%;
   display: flex;
   gap: 10px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
   flex-wrap: wrap;
   align-items: center;
 `;
 
-export const ChoresCard = styled.div`
+export const ChoresCardContainer = styled.div`
   width: 48%;
+  position: relative;
+`;
+
+export const CheckTask = styled.div`
+  position: absolute;
+  z-index: 100;
+  right: 0;
+  bottom: 0;
+  height: 30px;
+  width: 30px;
+  background-color: #e8e8e8;
+  border-radius: 10px 0 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ChoresCard = styled.div<Props>`
   background-color: #f8f8f8;
   padding: 10px;
   border-radius: 10px;
+  opacity: ${({ done }) => (done ? "0.6" : "1")};
+  pointer-events: ${({ done }) => (done ? "none" : "all")};
 `;
 
 export const ChoresHeader = styled.div`
@@ -115,11 +137,24 @@ export const ChoresMoreIcon = styled.div`
 
 export const ChoresTitle = styled.h2`
   font-size: 18px;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2em;
+  min-height: calc(1.2em * 3);
 `;
 
 export const ChoresDue = styled.div`
-  margin-top: 15px;
+  margin-top: 10px;
   font-size: 12px;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2em;
+  min-height: calc(1.2em * 2);
+  margin-right: 30px;
 `;
 
 export const TaskWarper = styled.div``;
@@ -133,4 +168,10 @@ export const AddTaskButton = styled.button<Props>`
   padding: 10px;
   border-radius: 15px;
   margin-top: 12px;
+`;
+
+export const DoneTasksTag = styled.div`
+  margin: 20px 0 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: 600;
 `;

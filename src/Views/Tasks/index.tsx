@@ -13,9 +13,15 @@ type TChores = {
   id: string;
   task: string;
   person: string;
-  dueDate: string;
+  addedDate: string;
+  dueDate: Date;
+  dueDay: string;
+  dueTime: string;
+  recurrent: boolean;
+  doneDate: string;
   status: string;
   importance: string;
+  observation: string;
 };
 
 type TRooms = {

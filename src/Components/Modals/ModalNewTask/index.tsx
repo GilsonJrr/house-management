@@ -57,6 +57,8 @@ type ModalNewTaskProps = {
   room?: TRooms;
   edit?: boolean;
   taskData?: FormData;
+  onCheckAsDone?: (type: "done" | "delete") => void;
+  onDelete?: (type: "done" | "delete") => void;
 };
 
 const ModalNewTask: FC<ModalNewTaskProps> = ({
@@ -65,6 +67,8 @@ const ModalNewTask: FC<ModalNewTaskProps> = ({
   room,
   edit,
   taskData,
+  onCheckAsDone,
+  onDelete,
 }) => {
   const { register, handleSubmit, reset, setValue, watch } = useForm<FormData>({
     resolver: yupResolver(schema) as any,
@@ -104,19 +108,14 @@ const ModalNewTask: FC<ModalNewTaskProps> = ({
     reset();
   };
 
-  const handleDone = () => {
-    const taskID = edit ? taskData?.id : generateUID(10);
-    set(ref(database, `QNC8XseB4G/rooms/${room?.id}/tasks/${taskID}`), {
-      ...taskData,
-      status: "done",
-      doneDate: new Date(),
-    })
-      .then((rooms) => rooms)
-      .catch((err) => {
-        throw new Error(err);
-      });
+  const handleDelete = () => {
+    onDelete?.("delete");
     close();
-    reset();
+  };
+
+  const handleDone = () => {
+    onCheckAsDone?.("done");
+    close();
   };
 
   useEffect(() => {
@@ -128,7 +127,7 @@ const ModalNewTask: FC<ModalNewTaskProps> = ({
       <Styled.Container>
         <Styled.Header>
           <Styled.Text>{edit ? "Editar" : "Nova"} Atividade</Styled.Text>
-          <Styled.DeleteIcon>
+          <Styled.DeleteIcon onClick={handleDelete}>
             <FaTrash />
           </Styled.DeleteIcon>
         </Styled.Header>
@@ -200,7 +199,7 @@ const ModalNewTask: FC<ModalNewTaskProps> = ({
             <Styled.EditButtonContainer>
               {!taskData?.recurrent && (
                 <Styled.EditButton buttonType="done" onClick={handleDone}>
-                  Marcar como comcluido
+                  Comcluir
                 </Styled.EditButton>
               )}
               <Styled.EditButton buttonType="edit" type="submit">

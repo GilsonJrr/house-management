@@ -37,6 +37,7 @@ const Tasks = () => {
   const [Color, setColor] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [rooms, setRooms] = useState<TRooms[]>();
+  const [room, setRoom] = useState<TRooms>();
 
   useEffect(() => {
     get(ref(database, "QNC8XseB4G/rooms"))
@@ -84,18 +85,35 @@ const Tasks = () => {
         }}
       >
         {rooms?.map((room) => {
-          return <RoomCard room={room} />;
+          return (
+            <RoomCard
+              room={room}
+              onRoomEdit={(romm) => {
+                setRoom(romm);
+                setShowModal(true);
+              }}
+            />
+          );
         })}
       </div>
       {!showModal && (
         <ButtonContainer>
           <ButtonBlur />
-          <AddNewButton onClick={() => setShowModal(true)}>
+          <AddNewButton
+            onClick={() => {
+              setRoom(undefined);
+              setShowModal(true);
+            }}
+          >
             Novo Comodo
           </AddNewButton>
         </ButtonContainer>
       )}
-      <ModalNewRoom display={showModal} close={() => setShowModal(false)} />
+      <ModalNewRoom
+        display={showModal}
+        close={() => setShowModal(false)}
+        room={room as unknown as TRooms}
+      />
     </div>
   );
 };

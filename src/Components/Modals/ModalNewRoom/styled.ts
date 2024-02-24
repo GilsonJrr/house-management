@@ -39,3 +39,16 @@ export const Button = styled.button`
     background-color: #afafaf;
   }
 `;
+
+export const DeleteIcon = styled.button`
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: none;
+  outline: none;
+  background-color: transparent;
+`;
+
+export const Header = styled.div`
+  position: relative;
+`;

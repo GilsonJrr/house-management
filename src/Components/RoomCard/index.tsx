@@ -11,6 +11,7 @@ import ModalNewTask from "../Modals/ModalNewTask";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/pt-br";
+import ModalConfirmation from "../Modals/ModalConfirmation";
 
 type TChores = {
   id: string;
@@ -39,6 +40,7 @@ type RoomCardProps = {
   room?: TRooms;
   chores?: TChores[];
   preview?: boolean;
+  onRoomEdit?: (room: TRooms) => void;
 };
 
 enum EDays {
@@ -54,9 +56,18 @@ enum EDays {
   "30days" = "A cada 30 dias",
 }
 
-const RoomCard: FC<RoomCardProps> = ({ room, chores = [], preview }) => {
+const RoomCard: FC<RoomCardProps> = ({
+  room,
+  chores = [],
+  preview,
+  onRoomEdit,
+}) => {
   const [showModal, setShowModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showChores, setShowChores] = useState(false);
+  const [confirmationType, setConfirmationType] = useState<"done" | "delete">(
+    "done"
+  );
 
   const [taskEdit, setTaskEdit] = useState<{
     edit: boolean;
@@ -68,9 +79,12 @@ const RoomCard: FC<RoomCardProps> = ({ room, chores = [], preview }) => {
     setShowChores((prev) => !prev);
   };
 
-  const handleOpenTaskModal = (edit: "edit" | "new", data?: TChores) => {
+  const handleOpenTaskModal = (
+    type: "edit" | "new" | "confirm",
+    data?: TChores
+  ) => {
     const options =
-      edit === "edit"
+      type === "edit" || type === "confirm"
         ? { edit: true, taskData: data }
         : {
             edit: false,
@@ -90,7 +104,7 @@ const RoomCard: FC<RoomCardProps> = ({ room, chores = [], preview }) => {
             } as unknown as TChores,
           };
     setTaskEdit(options);
-    setShowModal(true);
+    type === "confirm" ? setShowConfirmationModal(true) : setShowModal(true);
   };
 
   const pendentTasks = Object.values(room?.tasks || "").filter(
@@ -119,7 +133,7 @@ const RoomCard: FC<RoomCardProps> = ({ room, chores = [], preview }) => {
             options={[
               {
                 label: `Editar ${room?.roomName}`,
-                action: () => alert("roomName"),
+                action: () => onRoomEdit?.(room as unknown as TRooms),
               },
             ]}
           />
@@ -157,9 +171,16 @@ const RoomCard: FC<RoomCardProps> = ({ room, chores = [], preview }) => {
                       as {chore.dueTime}
                     </Styled.ChoresDue>
                   </Styled.ChoresCard>
-                  <Styled.CheckTask>
-                    <FaCheck color="#ffffff" />
-                  </Styled.CheckTask>
+                  {!chore.recurrent && (
+                    <Styled.CheckTask
+                      onClick={() => {
+                        setConfirmationType("done");
+                        handleOpenTaskModal("confirm", chore);
+                      }}
+                    >
+                      <FaCheck color="#ffffff" />
+                    </Styled.CheckTask>
+                  )}
                 </Styled.ChoresCardContainer>
               );
             })}
@@ -205,6 +226,21 @@ const RoomCard: FC<RoomCardProps> = ({ room, chores = [], preview }) => {
         room={room}
         edit={taskEdit?.edit}
         taskData={taskEdit?.taskData}
+        onCheckAsDone={(type) => {
+          setConfirmationType(type);
+          setShowConfirmationModal(true);
+        }}
+        onDelete={(type) => {
+          setConfirmationType(type);
+          setShowConfirmationModal(true);
+        }}
+      />
+      <ModalConfirmation
+        display={showConfirmationModal}
+        close={() => setShowConfirmationModal(false)}
+        task={taskEdit?.taskData || ([] as unknown as TChores)}
+        room={room}
+        confirmationType={confirmationType}
       />
     </Styled.Container>
   );

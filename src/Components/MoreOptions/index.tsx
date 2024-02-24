@@ -24,9 +24,13 @@ const MoreOptions: FC<MoreOptionsProps> = ({ title, options }) => {
     <Styled.Container>
       <FaEllipsisV onClick={() => setShowOptions(!showOptions)} />
       {showOptions && (
-        <Styled.OptionsWarper onBlur={handleBlur} tabIndex={0}>
+        <Styled.OptionsWarper>
           {options.map((option) => {
-            return <div onClick={option.action}>{option.label}</div>;
+            return (
+              <div tabIndex={0} onClick={option.action} onBlur={handleBlur}>
+                {option.label}
+              </div>
+            );
           })}
         </Styled.OptionsWarper>
       )}

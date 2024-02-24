@@ -10,5 +10,5 @@ export const OptionsWarper = styled.div`
   padding: 10px;
   border-radius: 10px;
   right: 0;
-  min-width: 150px;
+  white-space: nowrap;
 `;

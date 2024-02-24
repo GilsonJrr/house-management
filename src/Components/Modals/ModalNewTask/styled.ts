@@ -19,10 +19,13 @@ export const Header = styled.div`
   position: relative;
 `;
 
-export const DeleteIcon = styled.div`
+export const DeleteIcon = styled.button`
   position: absolute;
   right: 0;
   top: 0;
+  border: none;
+  outline: none;
+  background-color: transparent;
 `;
 
 export const Text = styled.h2`

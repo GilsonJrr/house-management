@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import { FaBed } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
+import { FaRedoAlt } from "react-icons/fa";
 
 import * as Styled from "./styled";
 import MoreOptions from "../MoreOptions";
@@ -65,9 +66,9 @@ const RoomCard: FC<RoomCardProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showChores, setShowChores] = useState(false);
-  const [confirmationType, setConfirmationType] = useState<"done" | "delete">(
-    "done"
-  );
+  const [confirmationType, setConfirmationType] = useState<
+    "done" | "delete" | "redo"
+  >("done");
 
   const [taskEdit, setTaskEdit] = useState<{
     edit: boolean;
@@ -208,6 +209,16 @@ const RoomCard: FC<RoomCardProps> = ({
                       {moment(chore.doneDate).calendar()}
                     </Styled.ChoresDue>
                   </Styled.ChoresCard>
+                  {!chore.recurrent && (
+                    <Styled.CheckTask
+                      onClick={() => {
+                        setConfirmationType("redo");
+                        handleOpenTaskModal("confirm", chore);
+                      }}
+                    >
+                      <FaRedoAlt color="#ffffff" />
+                    </Styled.CheckTask>
+                  )}
                 </Styled.ChoresCardContainer>
               );
             })}

@@ -35,12 +35,13 @@ type ModalConfirmationProps = {
   display?: boolean;
   task: TChores;
   room?: TRooms;
-  confirmationType: "done" | "delete";
+  confirmationType: "done" | "delete" | "redo";
 };
 
 enum EConfirmation {
   "done" = "Comcluir",
   "delete" = "Deletar",
+  "redo" = "Refazer",
 }
 
 const ModalConfirmation: FC<ModalConfirmationProps> = ({
@@ -59,7 +60,7 @@ const ModalConfirmation: FC<ModalConfirmationProps> = ({
   const handleDone = () => {
     set(ref(database, `QNC8XseB4G/rooms/${room?.id}/tasks/${task?.id}`), {
       ...task,
-      status: "done",
+      status: confirmationType === "done" ? "done" : "pendent",
       doneDate: new Date(),
     })
       .then((rooms) => rooms)
@@ -111,7 +112,11 @@ const ModalConfirmation: FC<ModalConfirmationProps> = ({
               onClick={handleDone}
               disabled={isButtonDisabled}
             >
-              {isButtonDisabled ? "teste" : "Marcar como comcluido"}
+              {isButtonDisabled
+                ? "teste"
+                : confirmationType === "done"
+                ? "Marcar como comcluido"
+                : "Refazer"}
             </Styled.EditButton>
           )}
           <Styled.EditButton buttonType="cancel" onClick={close}>
